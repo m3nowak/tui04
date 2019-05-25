@@ -14,6 +14,11 @@ FEATURE_FILE_CSV = 'artifacts/faces-celeba/list_attr_celeba.csv'
 IMAGES_FOLDER = 'artifacts/faces-celeba/images'
 DUMP_LOCATION = 'artifacts/faces-celeba/learning_model.pkl'
 
+def features_single_photo(path):
+    image = skimage.io.imread(path, as_gray=True)
+    image_hog = hog(image)
+    return image_hog
+
 def create_dataset():
     image_counter = 0
     image_hog_array = np.zeros((IMAGE_COUNT,FEATURE_SIZE))
@@ -24,8 +29,7 @@ def create_dataset():
             if image_counter % 100 == 0:
                 print("{}/{}".format(image_counter, IMAGE_COUNT))
             is_male = 1 if row['Male'] == '1' else 0
-            image = skimage.io.imread(os.path.join(IMAGES_FOLDER, row['image_id']), as_gray=True)
-            image_hog = hog(image)
+            image_hog = features_single_photo(os.path.join(IMAGES_FOLDER, row['image_id']))
             image_hog_array[image_counter] = image_hog
             feature_list.append(is_male)
             image_counter += 1
@@ -42,3 +46,4 @@ def load_dataset():
     with contextlib.closing(open(DUMP_LOCATION, 'rb')) as pfile:
         (image_hog_array, feature_array) = pickle.load(pfile)
     return image_hog_array, feature_array
+
