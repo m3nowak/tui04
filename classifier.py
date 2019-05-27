@@ -4,8 +4,8 @@ import contextlib
 
 DUMP_LOCATION = 'artifacts/faces-celeba/classifier{}.pkl'
 
-def create_classifier(verbose=False):
-    clsfr = neural_network.MLPClassifier(hidden_layer_sizes=(100,), verbose=verbose)
+def create_classifier(verbose=False, layer_sizes=(100,)):
+    clsfr = neural_network.MLPClassifier(hidden_layer_sizes=layer_sizes, verbose=verbose)
     return clsfr
 
 def dump_classifier(clsfr, name=''):
